@@ -1,0 +1,103 @@
+ # -*- coding: utf-8 -*-
+#!/usr/bin/python
+
+import mechanize, time, random, sys
+from random import randint
+from time import sleep
+import os
+import urllib2
+
+male_names = [
+"David", "Kenny", "Mark", "Danny", "James", "Austin", "Chris", "Dave", "Henry", "Oscar", "Mason",
+"Dominick", "Sam", "Piper", "Eric", "Bob", "Patrick", "Jamie", "Oliver", "Kyle", "Marcus", "Jack",
+]
+
+female_names = [
+"Hannah", "Luna", "Hayley", "Sarah", "Aimee", "Layla", "Nicole", "Becky", "Victoria", "Kayla",
+"Kaylie", "Arianna", "Brianne", "Kat", "Katie", "Alice", "Lauren", "Abbey", "Abby", "Anna",
+]
+
+surnames = [
+"Smith", "Johnson", "Williams", "Jones", "Lewis", "Phillips", "Theobald", "Schmitt", "Brown",
+"Winchester", "Anderson", "Taylor", "Mitchell", "Davidson", "Jenkins", "Miller", "Parker",
+]
+
+print """
+______ _       _____                     _   _____      
+|  ___| |     /  __ \                   | | |  _  |     
+| |_  | |__   | /  \/_ __ ___  __ _  ___| |_| |/' |_ __ 
+|  _| | '_ \  | |   | '__/ _ \/ _` |/ __| __|  /| | '__|
+| |   | |_) | | \__/\ | |  __/ (_| | (__| |_\ |_/ / |   
+\_|   |_.__/   \____/_|  \___|\__,_|\___|\__|\___/|_|                                                    
+[+] Created by WhoAmi & Fallag XTN
+[+] CLAY TeaM & FsocietyTN TeaM
+
+"""
+
+pick_female = random.choice(female_names)
+pick_male = random.choice(male_names)
+pick_surname = random.choice(surnames)
+
+email = raw_input("Facebook E-mail:")
+gender = raw_input("Facebook Gender:")
+
+message = "[!] Account has been created!"
+error = "[!] Error has occured!"
+
+
+br = mechanize.Browser()
+br.set_handle_robots(False)
+br.set_handle_equiv( True )
+br.set_handle_gzip( True )
+print """
+[+] Account is being created!"
+"""
+br.set_handle_redirect( True ) 
+br.set_handle_referer( True )
+br.set_handle_robots( False )
+
+br.set_handle_refresh( mechanize._http.HTTPRefreshProcessor(), max_time = 1)
+br.addheaders = [ ( 'User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' ) ]
+url = "http://m.facebook.com/reg/"
+br._factory.is_html = True
+br.open(url)
+
+for form in br.forms():
+	if form.attrs["id"] == "mobile-reg-form":
+		br.select_form(nr=0)
+		br.form = form
+		break
+
+lname = br.form["lastname"] = (pick_surname)
+br.form["reg_email__"] = (email)
+passw = br.form["reg_passwd__"] = 'password9781' #Default Password can be changed to anything you like
+br.form['birthday_day'] = "10" # default
+br.form['birthday_month'] = "8" # default
+br.form['birthday_year'] = "1990" # default
+if gender == "male":
+	br.form['sex'] = ["2"]
+if gender == "female":
+	br.form['sex'] = ["1"]
+if gender == "female":
+	fname = br.form['firstname'] = (pick_female)
+if gender == "male":
+	mname = br.form['firstname'] = (pick_male)
+br.submit()
+
+if gender == "female":
+	print "[!] Account Details"
+	print ""
+	print "Email: " + (email)
+	print "Gender: " + (gender)
+	print "Name: " + (fname) + " " + (lname)
+	print "Password: " + (passw)
+	print ""
+if gender == "male":
+	print "[!] Account Details"
+	print ""
+	print "Email: " + (email)
+	print "Gender: " + (gender)
+	print "Name: " + (mname) + " " + (lname)
+	print "Password: " + (passw)
+	print ""
+	os.system("sudo python Fb.py")
